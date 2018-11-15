@@ -1,5 +1,5 @@
-const nav = require('./mon.1.js');
-console.log('nav: ', nav);
+// const nav = require('./mon.1.js');
+// console.log('nav: ', nav);
 
 // var mongoose = require('mongoose');
 
@@ -51,3 +51,16 @@ console.log('nav: ', nav);
 // 		console.log(kittens);
 // 	  });
 // });
+
+
+const a = {
+	a: 'true'
+};
+const b = 'true';
+function test() {
+	return (a.a && b);
+}
+
+const res = test();
+console.log(res);
+console.log(typeof res);

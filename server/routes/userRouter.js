@@ -1,9 +1,8 @@
 const express = require('express');
 const _ = require('lodash');
-// const userServices = require('../services/userServices');
 const {User} = require('../models/userModel');
-const getCodeAndMessage = require('../responses.config');
-const {authenticate} = require('../middlewares/authenticate');
+// response codes and massages
+const { setResponse } = require('../responses.config');
 
 const router = express.Router();
 
@@ -17,33 +16,28 @@ function register(req, res, next) {
 	const body = _.pick(req.body, ['email', 'password']);
 	const user = new User(body);
 
-	const token = user.generateAuthToken();
-	if (token) {
-		user.save().then(() => {
-			res.send(user);
-		}).catch((e) => {
-			// !TODO - log error to server and handle error by message
-			console.log('double registration exception: ', e);
-			const { code, message } = getCodeAndMessage('internalServerError');
-			res.status(code).send({code, message});
-		});
-	} else {
-		// !TODO - log error to server
-		const { code, message } = getCodeAndMessage('internalServerError');
-		res.status(code).send({code, message});
-	}
+	user.generateAuthToken().then((token) => {
+		if(!token) {
+			return Promise.reject();
+		}
+		res.send(user);
+	}).catch((e) => {
+		// !TODO - log error to server and handle error by message
+		setResponse(req, res, '500');
+	});
 }
 
 function login(req, res, next) {
 	const body = _.pick(req.body, ['email', 'password']);
     
     User.findByCredentials(body.email, body.password).then((user) => {
-        const token = user.generateAuthToken();
-        res.header('x-auth', token).send(user);       
+		return user.generateAuthToken().then((token) => {
+			res.header('x-auth', token);
+			setResponse(req, res, '200', user);
+		});
     }).catch((e) => {
 		// !TODO - log error to server
-		const { code, message } = getCodeAndMessage('400');
-        res.status(code).send({ code, message });
+		setResponse(req, res, '401');
     });
 }
 

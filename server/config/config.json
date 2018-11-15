@@ -1,6 +1,7 @@
  {	
 	 "development" : {
 		"CONNECTION_STRING": "mongodb://localhost/trigorndb",
-		"JWT_SECRET": "KklsdflKk4555.,ljiufdshuiGjksd79851ds.,,kiyU!!!@kjdsfjkhfkLKKN.c,udTGSKS5455fISJDJhkkdksd.,.,$#@"	 
+		"JWT_SECRET": "KklsdflKk4555.,ljiufdshuiGjksd79851ds.,,kiyU!!!@kjdsfjkhfkLKKN.c,udTGSKS5455fISJDJhkkdksd.,.,$#@",
+		"PORT": "3000"
 	 }
 }

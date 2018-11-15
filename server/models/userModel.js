@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs'); // !TODO replace with bcrypt - probably
+const bcrypt = require('bcryptjs');
 
 
 
@@ -44,7 +44,7 @@ const UserSchema = new Schema({
 // this is called before action specified in first argument (save)
 // before user is saved
 UserSchema.pre('save', function(next) {
-    var user = this;
+    const user = this;
 
     // this checks if password parameter is going to be modified during the save
     // otherwise hashing funcion inside this block would hash hashed value
@@ -64,6 +64,9 @@ UserSchema.pre('save', function(next) {
     }
 });
 
+// in methods, functions for User instance are defined
+// -----------------
+// reduces parameters that shall be returned to user
 UserSchema.methods.toJSON = function() { // !TODO why is this called automatically
 	const user = this;
     const userObject = user.toObject();
@@ -73,23 +76,22 @@ UserSchema.methods.toJSON = function() { // !TODO why is this called automatical
 
 // generates token and stores it to DB
 UserSchema.methods.generateAuthToken = function() {
-	
-	try {
-		const user = this;
-		const access = 'auth';
-		const token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
-		user.tokens.push({access, token});
-		return token;
-	} catch(e) {
-		// log error - ! TODO
-		return false;
-	}
+    var user = this;
 
+    var access = 'auth';
+    var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
+    user.tokens.push({access, token});
+
+    return user.save().then(() => {
+        return token;
+    })
 };
 
+// in statics, functions for User definition are defined
+// --------------------
 // finds user by email and password
 UserSchema.statics.findByCredentials = function(email, password) {
-    var User = this;
+    const User = this;
 
     return User.findOne({email}).then((user) => {
         if(!user) {
@@ -111,6 +113,29 @@ UserSchema.statics.findByCredentials = function(email, password) {
     });
 };
 
+
+// finds user by token
+UserSchema.statics.findByToken = function(token) {
+    const User = this;
+    let decoded;
+
+    try{
+		decoded = jwt.verify(token, process.env.JWT_SECRET)
+    } catch (e) {
+        // return new Promise((resolve, reject) => {
+        //     reject();
+        // });
+
+		// same as
+        return Promise.reject(e);
+    }
+	console.log('token: ', token);
+    return User.findOne({
+        '_id': decoded._id, // doesn't have to have quotes around _id
+        'tokens.token': token,
+        'tokens.access':'auth'
+    });
+};
 
 
 const User = mongoose.model('User', UserSchema);
