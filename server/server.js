@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 // checks if the route is enabled
 const {detectAllowedRoutes} = require('./middlewares/detectAllowedRoutes');
 
+// set default route headers
+const {setHeaders} = require('./middlewares/setHeaders');
+
 // authentication middleware
 const {authenticate} = require('./middlewares/authenticate');
 
@@ -27,6 +30,8 @@ const port = process.env.PORT || 3000;
 // middlewares --------------------
 // parse middleware
 app.use(bodyParser.json());
+// sets headers
+app.use(setHeaders);
 // check if path is allowed
 app.use(detectAllowedRoutes);
 // authenticate with jws

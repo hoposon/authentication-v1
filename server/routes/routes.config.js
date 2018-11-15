@@ -41,11 +41,28 @@ const corsDefault = {
 	origin: 'http://example.com'
 }
 
+const headersDefault = {
+	'Content-Type' : 'application/json',
+	'X-Content-Type-Options': 'nosniff'
+}
+
 const getCorsConfig = (req, callback) => {
 	callback(null, routesConfig[req.originalUrl].cors || corsDefault) ;
 }
 
+const setRouteHeaders = (req, res, next) => {
+	let headers = headersDefault;
+	if (routesConfig && routesConfig[req.originalUrl] && routesConfig[req.originalUrl].headers) {
+		headers = {...headers, ...routesConfig[req.path].headers};
+	}
+	for (const header in headers) {
+		res.header(header, headers[header]);
+	}
+	next();
+}
+
 module.exports = {
 	routesConfig,
-	getCorsConfig
+	getCorsConfig,
+	setRouteHeaders
 }

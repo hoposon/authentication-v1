@@ -7,7 +7,7 @@ const codes = {
 	'400': {
 		code: 400,
 		success: false,
-		error: [{ 
+		errors: [{ 
 			errorCode: "BAD_REQUEST",
 			message: "Request no in correct format"
 		}]
@@ -15,7 +15,7 @@ const codes = {
 	'401': {
 		code: 401,
 		success: false,
-		error: [{ 
+		errors: [{ 
 			errorCode: "UNAUTHORIZED",
 			message: "Credential do not match"
 		}]
@@ -23,7 +23,7 @@ const codes = {
 	'404': {
 		code: 404,
 		success: false,
-		error: [{ 
+		errors: [{ 
 			errorCode: "NOT_FOUND",
 			message: "Service you are requesting not found"
 		}]
@@ -31,7 +31,7 @@ const codes = {
 	'500': {
 		code: 500,
 		success: false,
-		error: [{ 
+		errors: [{ 
 			errorCode: "SERVER_ERROR",
 			message: "Internal server error"
 		}]
