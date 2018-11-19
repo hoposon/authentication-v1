@@ -4,37 +4,42 @@ const codes = {
 		success: true,
 		data: []
 	},
+	'204': {
+		code: 204,
+		success: true,
+		data: []
+	},
 	'400': {
 		code: 400,
 		success: false,
-		errors: [{ 
+		error: { 
 			errorCode: "BAD_REQUEST",
 			message: "Request no in correct format"
-		}]
+		}
 	},
 	'401': {
 		code: 401,
 		success: false,
-		errors: [{ 
+		error: { 
 			errorCode: "UNAUTHORIZED",
 			message: "Credential do not match"
-		}]
+		}
 	},
 	'404': {
 		code: 404,
 		success: false,
-		errors: [{ 
+		error: { 
 			errorCode: "NOT_FOUND",
 			message: "Service you are requesting not found"
-		}]
+		}
 	},
 	'500': {
 		code: 500,
 		success: false,
-		errors: [{ 
+		error: { 
 			errorCode: "SERVER_ERROR",
 			message: "Internal server error"
-		}]
+		}
 	}
 }
 
@@ -47,9 +52,7 @@ function setResponse(req, res, code, data) {
 					data
 				]
 			} else {
-				codes[code].error = [
-					data
-				]
+				codes[code].error = data;
 			}
 		}
 	}

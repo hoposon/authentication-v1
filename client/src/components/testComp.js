@@ -9,6 +9,7 @@ export default class TestAPI extends React.Component {
 		this.callGet = this.callGet.bind(this);
 		this.callPostJSON = this.callPostJSON.bind(this);
 		this.callPost = this.callPost.bind(this);
+		this.login = this.login.bind(this);
 	}
 	render() {
 		return (
@@ -17,6 +18,7 @@ export default class TestAPI extends React.Component {
 				<button onClick={this.callGet}>GET</button>
 				<button onClick={this.callPostJSON}>callPostJSON</button>
 				<button onClick={this.callPost}>POST</button>
+				<button onClick={this.login}>LOGIN</button>
 			</div>
 		)
 	}
@@ -24,33 +26,9 @@ export default class TestAPI extends React.Component {
 	callGet() {
 		fetch('http://localhost:3000/test/test').then((data) => {
 			console.log('response: ', data);
+			console.log('response header: ', data.headers);
 			return data.json();
-		})
-		.then((data) => {
-			console.log('data:', data);
-			this.setState({
-				output: 'SUCCESSFULY CALLED'
-			});
-		})
-		.catch((e) => {
-			console.log('catch:', e.message);
-			this.setState({
-				output: 'CALL FAILED'
-			});
-		})
-	}
-
-	callGetJson() {
-		fetch('http://localhost:3000/test/test', {
-			headers: {
-				'Content-type': 'application/json'
-			},
-			body: JSON.stringify({
-				testString: 'this is a test string'
-			}) 
-		}).then((data) => {
-			console.log('response: ', data);
-			return data.json();
+			// return data.text();
 		})
 		.then((data) => {
 			console.log('data:', data);
@@ -98,6 +76,34 @@ export default class TestAPI extends React.Component {
 			})
 		}).then((data) => {
 			console.log('response: ', data);
+			return data.json();
+		})
+		.then((data) => {
+			console.log('data:', data);
+			this.setState({
+				output: 'SUCCESSFULY CALLED'
+			});
+		})
+		.catch((e) => {
+			console.log('catch:', e.message);
+			this.setState({
+				output: 'CALL FAILED'
+			});
+		})
+	}
+
+	login() {
+		fetch('http://localhost:3000/v1/users/login', {
+			method: "POST",
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				testString: 'this is a test string'
+			})
+		}).then((data) => {
+			console.log('response: ', data);
+			console.log('response header: ', data.headers);
 			return data.json();
 		})
 		.then((data) => {

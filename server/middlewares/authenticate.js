@@ -7,10 +7,10 @@ const {User} = require('../models/userModel');
 
 const authenticate = (req, res, next) => {
 
-	if (routesConfig[req.path]) {
+	if (routesConfig[req.path] && routesConfig[req.path][req.method]) {
 
-		if (routesConfig[req.path].authenticate) {
-			const token = req.header('x-auth');
+		if (routesConfig[req.path][req.method].authenticate) {
+			const token = req.header('Authorization');
     
 			User.findByToken(token).then((user) => {
 				if(!user) {
@@ -19,18 +19,18 @@ const authenticate = (req, res, next) => {
 					// res.status(401).send();
 					// this jumps to catch block
 				}
-
+				// console.log('user: ', user);
+				// console.log('user._id: ', user._id);
 				req.user = user;
 				req.token = token;
-				
+				next();
 			}).catch((e) => {
 				// !TODO - log error to server
 				setResponse(req, res, '401');
 			});
+		} else {
+			setResponse(req, res, '404');
 		}
-		
-		next();
-
 	} else {
 		// !TODO - log error to server
 		setResponse(req, res, '500');

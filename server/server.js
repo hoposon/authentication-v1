@@ -14,6 +14,7 @@ const {authenticate} = require('./middlewares/authenticate');
 
 // routes for user related services
 const userRouter = require('./routes/userRouter');
+const projectRouter = require('./routes/projectRouter');
 const testRouter = require('./routes/testRouter');
 
 // get mongoDB and create connection
@@ -43,6 +44,9 @@ app.use(cors(getCorsConfig));
 // routers --------------------
 // user related routes
 app.use('/v1/users', userRouter);
+
+// user related routes
+app.use('/v1/projects', projectRouter);
 
 // test routes
 app.use('/test', testRouter);

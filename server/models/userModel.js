@@ -113,7 +113,6 @@ UserSchema.statics.findByCredentials = function(email, password) {
     });
 };
 
-
 // finds user by token
 UserSchema.statics.findByToken = function(token) {
     const User = this;
@@ -129,7 +128,7 @@ UserSchema.statics.findByToken = function(token) {
 		// same as
         return Promise.reject(e);
     }
-	console.log('token: ', token);
+
     return User.findOne({
         '_id': decoded._id, // doesn't have to have quotes around _id
         'tokens.token': token,

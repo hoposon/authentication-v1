@@ -20,7 +20,7 @@ function register(req, res, next) {
 		if(!token) {
 			return Promise.reject();
 		}
-		res.send(user);
+		setResponse(req, res, '200', user);
 	}).catch((e) => {
 		// !TODO - log error to server and handle error by message
 		setResponse(req, res, '500');
