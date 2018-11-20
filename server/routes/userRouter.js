@@ -13,7 +13,7 @@ router.options('/login');
 router.post('/login', login);
 
 function register(req, res, next) {
-	const body = _.pick(req.body, ['email', 'password']);
+	const body = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
 	const user = new User(body);
 
 	user.generateAuthToken().then((token) => {

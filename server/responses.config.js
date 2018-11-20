@@ -14,7 +14,8 @@ const codes = {
 		success: false,
 		error: { 
 			errorCode: "BAD_REQUEST",
-			message: "Request no in correct format"
+			message: "Request no in correct format",
+			data: {}
 		}
 	},
 	'401': {
@@ -22,7 +23,8 @@ const codes = {
 		success: false,
 		error: { 
 			errorCode: "UNAUTHORIZED",
-			message: "Credential do not match"
+			message: "Credential do not match",
+			data: {}
 		}
 	},
 	'404': {
@@ -30,7 +32,17 @@ const codes = {
 		success: false,
 		error: { 
 			errorCode: "NOT_FOUND",
-			message: "Service you are requesting not found"
+			message: "Service you are requesting not found",
+			data: {}
+		}
+	},
+	'422': {
+		code: 422,
+		success: false,
+		error: { 
+			errorCode: "FIELDS_VALIDATION_ERROR",
+			message: "One or more fields raised validation errors.",
+			data: {}
 		}
 	},
 	'500': {
@@ -38,7 +50,8 @@ const codes = {
 		success: false,
 		error: { 
 			errorCode: "SERVER_ERROR",
-			message: "Internal server error"
+			message: "Internal server error",
+			data: {}
 		}
 	}
 }
@@ -48,11 +61,9 @@ function setResponse(req, res, code, data) {
 	if (codes[code]) {
 		if (data) {
 			if (reg.test(code)) {
-				codes[code].data = [
-					data
-				]
+				codes[code].data = data;
 			} else {
-				codes[code].error = data;
+				codes[code].error.data = data;
 			}
 		}
 	}

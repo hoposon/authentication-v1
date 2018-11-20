@@ -27,7 +27,9 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         minlength: 6
-    },
+	},
+	firstName: String,
+	lastName: String,
     tokens: [{
         access: {
             type: String,
@@ -138,4 +140,7 @@ UserSchema.statics.findByToken = function(token) {
 
 
 const User = mongoose.model('User', UserSchema);
-module.exports = {User};
+module.exports = {
+	User,
+	UserSchema
+};

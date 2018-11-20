@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { User } = require('./userModel');
 const validator = require('validator');
 const _ = require('lodash');
 
@@ -10,7 +11,6 @@ const ProjectSchema = new Schema({
         required: true,
         trim: true,
         minlength: 1,
-        unique: true,
         // validate: {
         //     // validator: (value) => {
         //     //     return validator.isEmail(value)
@@ -24,9 +24,25 @@ const ProjectSchema = new Schema({
         trim: true
 	},
 	_creator: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-    }
+		type: {
+			_id: {
+				type: mongoose.Schema.Types.ObjectId,
+				required: true
+			},
+			email: {
+				type: String,
+				required: true
+			},
+			firstName: String,
+			lastName: String
+		},
+		required: true,
+		validate: async (v) => {
+			const user = await User.findById(v._id);
+			if (!user) return Promise.reject('User Not Found');
+			return Promise.resolve('User found');
+		}
+	}
 })
 
 // in methods, functions for Project instance are defined

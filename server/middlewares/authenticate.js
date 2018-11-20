@@ -28,7 +28,10 @@ const authenticate = (req, res, next) => {
 				// !TODO - log error to server
 				setResponse(req, res, '401');
 			});
-		} else {
+		} else if (routesConfig[req.path][req.method].authenticate === false) {
+			next();
+		}
+		else {
 			setResponse(req, res, '404');
 		}
 	} else {
