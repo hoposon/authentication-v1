@@ -11,6 +11,8 @@ router.options('/register');
 router.post('/register', register);
 router.options('/login');
 router.post('/login', login);
+router.options('/acl');
+router.post('/acl', manageAcl);
 
 function register(req, res, next) {
 	const body = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
@@ -32,13 +34,29 @@ function login(req, res, next) {
     
     User.findByCredentials(body.email, body.password).then((user) => {
 		return user.generateAuthToken().then((token) => {
-			res.header('x-auth', token);
+			res.header('Authorization', token);
 			setResponse(req, res, '200', user);
 		});
     }).catch((e) => {
 		// !TODO - log error to server
 		setResponse(req, res, '401');
     });
+}
+
+function manageAcl(req, res, next) {
+	
+	let tempUser = req.user;
+	tempUser.acls = _.pick(req.body, ['acl']).acl;
+	
+	const user = new User(tempUser);
+	user.save().then((user) => {
+		if(!user) {
+			return Promise.reject();
+		}
+		setResponse(req, res, '200', user);
+	}).catch((e) => {
+		setResponse(req, res, '500');
+	})
 }
 
 

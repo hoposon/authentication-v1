@@ -9,7 +9,11 @@ const routesConfig = {
 				credentials: false,
 				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 			},
-			authenticate: false
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: ''
+			}			
 		}
 	},
 	'/v1/users/login': {
@@ -19,7 +23,25 @@ const routesConfig = {
 				origin: 'http://example.com',
 				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 			},
-			authenticate: false
+			authenticate: false,
+			authorization: {
+				authorize: false,
+				operationType: ''
+			}
+		}
+	},
+	'/v1/users/acl': {
+		'POST' : {
+			enabled: true,
+			cors: {
+				origin: 'http://example.com',
+				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+			},
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: ''
+			}
 		}
 	},
 	'/test/test': {
@@ -29,7 +51,11 @@ const routesConfig = {
 				origin: '*',
 				//optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 			},
-			authenticate: false
+			authenticate: false,
+			authorization: {
+				authorize: false,
+				operationType: ''
+			}
 		}
 	},
 	'/test/test/fooauthenticated': {
@@ -39,7 +65,11 @@ const routesConfig = {
 				origin: '*',
 				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 			},
-			authenticate: true
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: ''
+			}
 		}
 	},
 	'/v1/projects': {
@@ -52,7 +82,11 @@ const routesConfig = {
 				credentials: false,
 				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 			},
-			authenticate: true
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: ''
+			}
 		},
 		'POST' : {
 			enabled: true,
@@ -63,7 +97,11 @@ const routesConfig = {
 				credentials: false,
 				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 			},
-			authenticate: true
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: ''
+			}
 		}
 	}
 }

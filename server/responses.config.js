@@ -61,7 +61,7 @@ function setResponse(req, res, code, data) {
 	if (codes[code]) {
 		if (data) {
 			if (reg.test(code)) {
-				codes[code].data = data;
+				codes[code].data.push(data);
 			} else {
 				codes[code].error.data = data;
 			}
