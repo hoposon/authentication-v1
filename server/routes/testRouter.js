@@ -89,15 +89,16 @@ class RBAC {
 		this.sorted = [];
 	}
 
-	s(roles, startLevel) {
+	s(roles, startLevel, hasParent=false) {
+		// neco jako has parent na urceni tech nejvyssich - mozna lepsi nez level
 		let level = startLevel;
 		for (const r of roles) {
 			let t = this.roles[r];
 			if (t.inherits) {
-				this.sorted.push({name:r, level: level--})
-				this.s(t.inherits, level)
+				this.sorted.push({name:r, level: level--});
+				this.s(t.inherits, level, true);
 			} else {
-				this.sorted.push({name:r, level: level--})
+				this.sorted.push({name:r, level: level--, hasParent});
 			}
 		}
 	}

@@ -12,7 +12,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: ''
+				operationType: '',
+				resources: ''
 			}			
 		}
 	},
@@ -26,7 +27,8 @@ const routesConfig = {
 			authenticate: false,
 			authorization: {
 				authorize: false,
-				operationType: ''
+				operationType: '',
+				resources: ''
 			}
 		}
 	},
@@ -40,7 +42,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: ''
+				operationType: '',
+				resources: ''
 			}
 		}
 	},
@@ -54,7 +57,8 @@ const routesConfig = {
 			authenticate: false,
 			authorization: {
 				authorize: false,
-				operationType: ''
+				operationType: '',
+				resources: ''
 			}
 		}
 	},
@@ -68,7 +72,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: ''
+				operationType: '',
+				resources: ''
 			}
 		}
 	},
@@ -85,7 +90,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: ''
+				operationType: '',
+				resources: ''
 			}
 		},
 		'POST' : {
@@ -100,7 +106,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: ''
+				operationType: '',
+				resources: ''
 			}
 		}
 	}
