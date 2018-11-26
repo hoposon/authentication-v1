@@ -12,6 +12,9 @@ const {setHeaders} = require('./middlewares/setHeaders');
 // authentication middleware
 const {authenticate} = require('./middlewares/authenticate');
 
+// authorization middleware
+const {authorize} = require('./middlewares/authorization');
+
 // routes for user related services
 const userRouter = require('./routes/userRouter');
 const projectRouter = require('./routes/projectRouter');
@@ -35,10 +38,12 @@ app.use(bodyParser.json());
 app.use(setHeaders);
 // check if path is allowed
 app.use(detectAllowedRoutes);
-// authenticate with jws
-app.use(authenticate);
 // set cors
 app.use(cors(getCorsConfig));
+// authenticate with jws
+app.use(authenticate);
+// authorization
+app.use(authorize);
 // middlewares --------------------
 
 // routers --------------------

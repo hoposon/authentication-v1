@@ -11,20 +11,23 @@ router.options('/register');
 router.post('/register', register);
 router.options('/login');
 router.post('/login', login);
-router.options('/acl');
-router.post('/acl', manageAcl);
+router.options('/roles');
+router.post('/roles', grantRoles);
 
 function register(req, res, next) {
 	const body = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
 	const user = new User(body);
-
+	// console.log('user1: ', user);
 	user.generateAuthToken().then((token) => {
+		// console.log('user2: ', user);
 		if(!token) {
 			return Promise.reject();
 		}
+		// console.log('user3: ', user);
 		setResponse(req, res, '200', user);
 	}).catch((e) => {
 		// !TODO - log error to server and handle error by message
+		// console.log('reg 500 error: ', e);
 		setResponse(req, res, '500');
 	});
 }
@@ -43,10 +46,10 @@ function login(req, res, next) {
     });
 }
 
-function manageAcl(req, res, next) {
+function grantRoles(req, res, next) {
 	
 	let tempUser = req.user;
-	tempUser.acls = _.pick(req.body, ['acl']).acl;
+	tempUser.roles = _.pick(req.body, ['roles']);
 	
 	const user = new User(tempUser);
 	user.save().then((user) => {

@@ -2,12 +2,12 @@ const codes = {
 	'200': {
 		code: 200,
 		success: true,
-		data: []
+		data: {}
 	},
 	'204': {
 		code: 204,
 		success: true,
-		data: []
+		data: {}
 	},
 	'400': {
 		code: 400,
@@ -58,16 +58,32 @@ const codes = {
 
 function setResponse(req, res, code, data) {
 	const reg = new RegExp(/2[0-9]{2}/);
+	// console.log('code: ', code);
 	if (codes[code]) {
+		let resp = Object.assign({}, codes[code]);
+		// let resp = codes[code];
+		// console.log('resp: ', resp);
 		if (data) {
 			if (reg.test(code)) {
-				codes[code].data.push(data);
+				resp.data = data;
 			} else {
-				codes[code].error.data = data;
+				resp.error.data = data;
 			}
 		}
+		// console.log('resp: ', resp);
+		res.status(code).send(JSON.stringify(resp));
+	} else {
+		res.status(500).send(JSON.stringify({
+			code: 500,
+			success: false,
+			error: { 
+				errorCode: "SERVER_ERROR",
+				message: "Internal server error",
+				data: {}
+			}
+		}));
 	}
-	res.status(code).send(JSON.stringify(codes[code]));
+	
 }
 
 function getResponse(codeName) {
@@ -75,6 +91,6 @@ function getResponse(codeName) {
 }
 
 module.exports = {
-	getResponse,
+	// getResponse,
 	setResponse
 }

@@ -30,7 +30,7 @@ const UserSchema = new Schema({
 	},
 	firstName: String,
 	lastName: String,
-	acls: [],
+	roles: [],
     tokens: [{
         access: {
             type: String,

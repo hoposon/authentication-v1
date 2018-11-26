@@ -2,27 +2,48 @@
 const { routesConfig } = require('../routes/routes.config');
 
 let roles = {
-	aclAdmin: {
+	grantsAdmin: {
 		can: {
-			edit: {
-				rosources: /^acl$/,
+			create: {
+				rosources: /^roles$/,
+			},
+			delete: {
+				rosources: /^roles$/,
 			}
 		}
 	},
 	admin: {
 		can: {
-			edit: {
-				rosources: /^((?!acl).)*$/
+			create: {
+				resources: /^((?!roles).)*$/
 			},
 			read: {
 				rosources: /.+/	
-			}
+			},
+			update: {
+				rosources: /.+/
+			},
+			delete: {
+				rosources: /^((?!roles).)*$/
+			},
+			
 		},
 		inherits: ['user']
 	},
 	owner: {
 		can: {
-			edit: {
+			create: {
+				rosources: /^ticket$/				
+			},
+			update: {
+				rosources: /^ticket$/,
+				condition: {
+					mongoCond: (params) => {
+						return params.user.id === params.post.owner
+					}
+				}				
+			},
+			delete: {
 				rosources: /^ticket$/,
 				condition: {
 					mongoCond: (params) => {
@@ -44,12 +65,12 @@ let roles = {
 
 class RBAC {
 
-	constructor(opts) {
-        this.init(opts);
+	constructor(roles) {
+        this.init(roles);
 	}
 	
 	init(roles) {
-		this.roles = opts;
+		this.roles = roles;
 	}
 
 	can(userRole, operation, resources) {
@@ -106,19 +127,28 @@ const authorize = (req, res, next) => {
 	if (routesConfig[req.path] && 
 		routesConfig[req.path][req.method] && 
 		routesConfig[req.path][req.method].authorization &&
-		routesConfig[req.path][req.method].authorization.authorize) {
+		routesConfig[req.path][req.method].authorization.authorize &&
+		routesConfig[req.path][req.method].authorization.operationType) {
 
-		const operation = routesConfig[req.path][req.method].authorize.operationType || ['edit'];
+		const operation = routesConfig[req.path][req.method].authorization.operationType;
 		const auth = new RBAC(roles);
-		if(auth.can(req.user.acls, operation))
+
+		if(auth.can(req.user.roles, operation).can) {
+			console.log('this is authorized object: ', auth.can(req.user.roles, operation));
+		} else {
+			console.log('this is unauthorized object: ', auth.can(req.user.roles, operation));
+		}
+		next();
 
 	} else if (routesConfig[req.path] && 
 		routesConfig[req.path][req.method] && 
 		routesConfig[req.path][req.method].authorization &&
 		routesConfig[req.path][req.method].authorization.authorize === false) {
+		console.log('auth false');
 		next();
 	} else {
 		// !TODO - log error to server
+		console.log('auth error');
 		setResponse(req, res, '500');
 	}
 

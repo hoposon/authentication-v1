@@ -9,11 +9,11 @@ const routesConfig = {
 				credentials: false,
 				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 			},
-			authenticate: true,
+			authenticate: false,
 			authorization: {
-				authorize: true,
-				operationType: '',
-				resources: ''
+				authorize: false,
+				operationType: 'create',
+				resources: 'users'
 			}			
 		}
 	},
@@ -27,12 +27,12 @@ const routesConfig = {
 			authenticate: false,
 			authorization: {
 				authorize: false,
-				operationType: '',
-				resources: ''
+				operationType: 'read',
+				resources: 'users'
 			}
 		}
 	},
-	'/v1/users/acl': {
+	'/v1/users/roles': {
 		'POST' : {
 			enabled: true,
 			cors: {
@@ -42,8 +42,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: '',
-				resources: ''
+				operationType: 'create',
+				resources: 'roles'
 			}
 		}
 	},
@@ -71,7 +71,7 @@ const routesConfig = {
 			},
 			authenticate: true,
 			authorization: {
-				authorize: true,
+				authorize: false,
 				operationType: '',
 				resources: ''
 			}
@@ -90,8 +90,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: '',
-				resources: ''
+				operationType: 'read',
+				resources: 'projects'
 			}
 		},
 		'POST' : {
@@ -106,8 +106,8 @@ const routesConfig = {
 			authenticate: true,
 			authorization: {
 				authorize: true,
-				operationType: '',
-				resources: ''
+				operationType: 'create',
+				resources: 'projects'
 			}
 		}
 	}
