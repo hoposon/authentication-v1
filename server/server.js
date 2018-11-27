@@ -31,6 +31,23 @@ const {getCorsConfig} = require('./routes/routes.config');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// app.use((req, res, next) => {
+// 	res.header('Access-Control-Allow-Origin', '*');
+// 	res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+// 	res.header('Access-Control-Allow-Credentials', 'true');
+// 	res.header('Access-Control-Allow-Headers', 'content-type');
+// 	res.header('Access-Control-Allow-Origin', 'http://local.avast.com:5000');
+// 	next();
+// });
+// app.options('/avast/test');
+// // app.options('/avast/test', (req) => {
+// // 	console.log('avast preflight request: ', req);
+// // });
+// app.post('/avast/test', (req, res) => {
+// 	console.log('avast request: ', req.headers);
+// 	res.send({message: "OK"});
+// });
+
 // middlewares --------------------
 // parse middleware
 app.use(bodyParser.json());

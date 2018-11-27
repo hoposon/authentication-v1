@@ -12,7 +12,7 @@ router.post('/register', register);
 router.options('/login');
 router.post('/login', login);
 router.options('/roles');
-router.post('/roles', grantRoles);
+router.patch('/roles', grantRoles);
 
 function register(req, res, next) {
 	const body = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
@@ -24,7 +24,7 @@ function register(req, res, next) {
 			return Promise.reject();
 		}
 		// console.log('user3: ', user);
-		setResponse(req, res, '200', user);
+		setResponse(req, res, '201', user);
 	}).catch((e) => {
 		// !TODO - log error to server and handle error by message
 		// console.log('reg 500 error: ', e);
@@ -48,18 +48,25 @@ function login(req, res, next) {
 
 function grantRoles(req, res, next) {
 	
-	let tempUser = req.user;
-	tempUser.roles = _.pick(req.body, ['roles']);
+	const tempUser = _.pick(req.body, ['userId', 'email', 'roles']);
 	
-	const user = new User(tempUser);
-	user.save().then((user) => {
-		if(!user) {
-			return Promise.reject();
-		}
-		setResponse(req, res, '200', user);
+	User.findOne({
+		_id: tempUser.userId,
+		email: tempUser.email
+	}).then((user) => {
+		console.log('grantRoles user: ', user);
+		return user.updateRoles(true, tempUser.roles);
+	}).then(() => {
+		setResponse(req, res, '200');
 	}).catch((e) => {
-		setResponse(req, res, '500');
-	})
+		console.log(e);
+		setResponse(req, res, '422', {
+			fields: {
+				userId: "Not found",
+				email: "Not found"
+			}
+		});
+	});
 }
 
 

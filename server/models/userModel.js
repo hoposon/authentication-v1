@@ -67,8 +67,26 @@ UserSchema.pre('save', function(next) {
     }
 });
 
+
+
 // in methods, functions for User instance are defined
 // -----------------
+// Check user roles and adds or remove role to/from existing roles
+UserSchema.methods.updateRoles = function(operation, roles) {
+	const user = this;
+
+	roles.reduce((uRoles, role, idx) => {
+		if (!uRoles.includes(role) && operation) {
+			return uRoles.push(role) // add role
+		} else if (uRoles.includes(role) && !operation) {
+			return uRoles.splice(idx, 1); // remove role
+		}
+		return uRoles;
+	}, user.roles);
+
+	return user.save();
+}	
+
 // reduces parameters that shall be returned to user
 UserSchema.methods.toJSON = function() { // !TODO why is this called automatically
 	const user = this;
@@ -124,11 +142,6 @@ UserSchema.statics.findByToken = function(token) {
     try{
 		decoded = jwt.verify(token, process.env.JWT_SECRET)
     } catch (e) {
-        // return new Promise((resolve, reject) => {
-        //     reject();
-        // });
-
-		// same as
         return Promise.reject(e);
     }
 

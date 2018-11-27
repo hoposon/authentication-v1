@@ -2,11 +2,19 @@ const codes = {
 	'200': {
 		code: 200,
 		success: true,
+		message: 'OK',
+		data: {}
+	},
+	'201': {
+		code: 201,
+		success: true,
+		message: 'Created',
 		data: {}
 	},
 	'204': {
 		code: 204,
 		success: true,
+		message: 'No data dound',
 		data: {}
 	},
 	'400': {

@@ -33,7 +33,7 @@ const routesConfig = {
 		}
 	},
 	'/v1/users/roles': {
-		'POST' : {
+		'PATCH' : {
 			enabled: true,
 			cors: {
 				origin: 'http://example.com',
@@ -41,7 +41,7 @@ const routesConfig = {
 			},
 			authenticate: true,
 			authorization: {
-				authorize: true,
+				authorize: false,
 				operationType: 'create',
 				resources: 'roles'
 			}
