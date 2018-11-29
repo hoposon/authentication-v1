@@ -56,4 +56,6 @@ ProjectSchema.methods.toJSON = function() { // !TODO why is this called automati
 }
 
 const Project = mongoose.model('Project', ProjectSchema);
-module.exports = {Project};
+module.exports = {
+	Project
+};

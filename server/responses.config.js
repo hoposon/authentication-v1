@@ -3,19 +3,19 @@ const codes = {
 		code: 200,
 		success: true,
 		message: 'OK',
-		data: {}
+		data: []
 	},
 	'201': {
 		code: 201,
 		success: true,
 		message: 'Created',
-		data: {}
+		data: []
 	},
 	'204': {
 		code: 204,
 		success: true,
 		message: 'No data dound',
-		data: {}
+		data: []
 	},
 	'400': {
 		code: 400,
