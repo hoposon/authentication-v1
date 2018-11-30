@@ -6,89 +6,17 @@ const { Project } = require('./projectModel');
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
-
-})
-
-const TicketSchema = new Schema({
-	name: {
+	comment: {
 		type: String,
-		required: true,
 		trim: true,
-		minlength: 1
-	},
-	description: {
-		type: String,
-		maxlength: 5000,
-		trim: true
+		minlength: 1,
+		maxlength: 5000
 	},
 	createDate: {
 		type: Date,
 		required: true
 	},
-	comments: [{
-		comment: {
-			type: String,
-			trim: true,
-			minlength: 1,
-			maxlength: 5000,
-			createDate: {
-				type: Date,
-				required: true
-			}
-		},
-		_creator: {
-			type: {
-				_id: {
-					type: mongoose.Schema.Types.ObjectId,
-					required: true
-				},
-				email: {
-					type: String,
-					required: true
-				},
-				firstName: String,
-				lastName: String
-			},
-			required: true,
-			validate: async (v) => {
-				const user = await User.findById(v._id);
-				if (!user) return Promise.reject('User Not Found');
-				return Promise.resolve('User found');
-			}
-		},
-		modifiedBy: [{
-			_user: {
-				type: {
-					_id: {
-						type: mongoose.Schema.Types.ObjectId,
-						required: true
-					},
-					email: {
-						type: String,
-						required: true
-					},
-					firstName: String,
-					lastName: String
-				},
-				required: true,
-				validate: async (v) => {
-					const user = await User.findById(v._id);
-					if (!user) return Promise.reject('User Not Found');
-					return Promise.resolve('User found');
-				}
-			},
-			modifyDate: {
-				type: Date,
-				required: true
-			}
-		}]
-	}],
-	_state: {
-		type: String,
-		required: true
-		// !TODO validation against State object
-	},
-	_creator: {
+	_user: {
 		type: {
 			_id: {
 				type: mongoose.Schema.Types.ObjectId,
@@ -108,7 +36,77 @@ const TicketSchema = new Schema({
 			return Promise.resolve('User found');
 		}
 	},
-	modifiedBy: [{
+	modified: [{
+		_user: {
+			type: {
+				_id: {
+					type: mongoose.Schema.Types.ObjectId,
+					required: true
+				},
+				email: {
+					type: String,
+					required: true
+				},
+				firstName: String,
+				lastName: String
+			},
+			required: true,
+			validate: async (v) => {
+				const user = await User.findById(v._id);
+				if (!user) return Promise.reject('User Not Found');
+				return Promise.resolve('User found');
+			}
+		},
+		modifyDate: {
+			type: Date,
+			required: true
+		}
+	}]
+})
+
+const TicketSchema = new Schema({
+	name: {
+		type: String,
+		required: true,
+		trim: true,
+		minlength: 1
+	},
+	description: {
+		type: String,
+		maxlength: 5000,
+		trim: true
+	},
+	createDate: {
+		type: Date,
+		required: true
+	},
+	comments: [CommentSchema],
+	_state: {
+		type: String,
+		required: true
+		// !TODO validation against State object
+	},
+	_user: {
+		type: {
+			_id: {
+				type: mongoose.Schema.Types.ObjectId,
+				required: true
+			},
+			email: {
+				type: String,
+				required: true
+			},
+			firstName: String,
+			lastName: String
+		},
+		required: true,
+		validate: async (v) => {
+			const user = await User.findById(v._id);
+			if (!user) return Promise.reject('User Not Found');
+			return Promise.resolve('User found');
+		}
+	},
+	modified: [{
 		_user: {
 			type: {
 				_id: {
@@ -141,7 +139,7 @@ const TicketSchema = new Schema({
 				type: mongoose.Schema.Types.ObjectId,
 				required: true
 			},
-			aname: {
+			name: {
 				type: String,
 				required: true
 			},
@@ -155,9 +153,9 @@ const TicketSchema = new Schema({
 	}
 })
 
-TicketSchema.pre('save', function(next) {
-	this.createDate = this.createDate || Date.now();
-})
+// TicketSchema.pre('save', function(next) {
+	
+// })
 
 
 

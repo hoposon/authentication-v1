@@ -23,7 +23,7 @@ const ProjectSchema = new Schema({
 		type: String,
         trim: true
 	},
-	_creator: {
+	_user: {
 		type: {
 			_id: {
 				type: mongoose.Schema.Types.ObjectId,

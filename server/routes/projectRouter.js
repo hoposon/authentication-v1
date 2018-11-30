@@ -35,7 +35,7 @@ function addProject(req, res, next) {
 	const body = _.pick(req.body, ['name', 'description']);
 	const project = new Project({
 		...body, 
-		_creator: {
+		_user: {
 			_id: req.user._id,
 			email: req.user.email,
 			firstName: req.user.firstName || '',

@@ -110,6 +110,40 @@ const routesConfig = {
 				resources: 'projects'
 			}
 		}
+	},
+	'/v1/tickets': {
+		'GET' : {
+			enabled: true,
+			cors: {
+				origin: '*',
+				methods: 'GET',
+				allowedHeaders: 'Content-Type,Authorization',
+				credentials: false,
+				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+			},
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: 'read',
+				resources: 'tickets'
+			}
+		},
+		'POST' : {
+			enabled: true,
+			cors: {
+				origin: '*',
+				methods: 'POST',
+				allowedHeaders: 'Content-Type,Authorization',
+				credentials: false,
+				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+			},
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: 'create',
+				resources: 'tickets'
+			}
+		}
 	}
 }
 

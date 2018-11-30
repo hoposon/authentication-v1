@@ -18,6 +18,7 @@ const {authorize} = require('./middlewares/authorization');
 // routes for user related services
 const userRouter = require('./routes/userRouter');
 const projectRouter = require('./routes/projectRouter');
+const ticketRouter = require('./routes/ticketRouter');
 const testRouter = require('./routes/testRouter');
 
 // get mongoDB and create connection
@@ -67,8 +68,12 @@ app.use(authorize);
 // user related routes
 app.use('/v1/users', userRouter);
 
-// user related routes
+// project related routes
 app.use('/v1/projects', projectRouter);
+
+// ticket related routes
+app.use('/v1/tickets', ticketRouter);
+
 
 // test routes
 app.use('/test', testRouter);
