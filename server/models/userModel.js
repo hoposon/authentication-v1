@@ -92,7 +92,7 @@ UserSchema.methods.toJSON = function() { // !TODO why is this called automatical
 	const user = this;
     const userObject = user.toObject();
 
-    return _.pick(userObject, ['_id', 'email']);
+    return _.pick(userObject, ['_id', 'email', 'firstName', 'lastName']);
 }
 
 // generates token and stores it to DB

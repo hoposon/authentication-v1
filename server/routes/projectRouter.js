@@ -17,9 +17,10 @@ function getAllProjects(req, res, next) {
 
 	Project
 	.find()
-	.populate('user')
+	.populate('_user', '_id firstName lastName email')
+	// .populate('_user')
 	.then((projects) => {
-		if(projects === {}) {
+		if(projects.length === 0) {
 			setResponse(req, res, '204');
 		}
 		setResponse(req, res, '200', projects);
@@ -35,12 +36,7 @@ function addProject(req, res, next) {
 	const body = _.pick(req.body, ['name', 'description']);
 	const project = new Project({
 		...body, 
-		_user: {
-			_id: req.user._id,
-			email: req.user.email,
-			firstName: req.user.firstName || '',
-			lastName: req.user.lastName || '',
-		}
+		_user: req.user._id
 	});
 	// console.log('pproject: ', project);
 	project.save().then((project) => {

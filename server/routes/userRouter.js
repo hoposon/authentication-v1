@@ -24,7 +24,7 @@ function register(req, res, next) {
 			return Promise.reject();
 		}
 		// console.log('user3: ', user);
-		setResponse(req, res, '201', user);
+		setResponse(req, res, '201', [user]);
 	}).catch((e) => {
 		// !TODO - log error to server and handle error by message
 		// console.log('reg 500 error: ', e);
@@ -38,7 +38,7 @@ function login(req, res, next) {
     User.findByCredentials(body.email, body.password).then((user) => {
 		return user.generateAuthToken().then((token) => {
 			res.header('Authorization', token);
-			setResponse(req, res, '200', user);
+			setResponse(req, res, '200', [user]);
 		});
     }).catch((e) => {
 		// !TODO - log error to server
