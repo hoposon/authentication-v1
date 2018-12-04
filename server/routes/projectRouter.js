@@ -39,11 +39,11 @@ function addProject(req, res, next) {
 		_user: req.user._id
 	});
 	// console.log('pproject: ', project);
-	project.save().then((project) => {
-		if(!project) {
+	project.save().then((retProject) => {
+		if(!retProject) {
 			return Promise.reject();
 		}
-		setResponse(req, res, '200', [project]);
+		setResponse(req, res, '200', [retProject]);
 	})
 	.catch((e) => {
 		if (e && e.name && e.name === 'ValidationError') {

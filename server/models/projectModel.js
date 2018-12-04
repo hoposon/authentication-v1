@@ -17,7 +17,13 @@ const ProjectSchema = new Schema({
         trim: true
 	},
 	_user: {
-		type: mongoose.Schema.Types.ObjectId, ref: 'User' 
+		type: mongoose.Schema.Types.ObjectId, ref: 'User',
+		required: true,
+		validate: async (v) => {
+			const user = await User.findById(v._id);
+			if (!user) return Promise.reject('User Not Found');
+			return Promise.resolve('User found');
+		}
 	}
 })
 

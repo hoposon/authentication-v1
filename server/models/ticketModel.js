@@ -17,18 +17,7 @@ const CommentSchema = new Schema({
 		required: true
 	},
 	_user: {
-		type: {
-			_id: {
-				type: mongoose.Schema.Types.ObjectId,
-				required: true
-			},
-			email: {
-				type: String,
-				required: true
-			},
-			firstName: String,
-			lastName: String
-		},
+		type: mongoose.Schema.Types.ObjectId, ref: 'User',
 		required: true,
 		validate: async (v) => {
 			const user = await User.findById(v._id);
@@ -38,18 +27,7 @@ const CommentSchema = new Schema({
 	},
 	modified: [{
 		_user: {
-			type: {
-				_id: {
-					type: mongoose.Schema.Types.ObjectId,
-					required: true
-				},
-				email: {
-					type: String,
-					required: true
-				},
-				firstName: String,
-				lastName: String
-			},
+			type: mongoose.Schema.Types.ObjectId, ref: 'User',
 			required: true,
 			validate: async (v) => {
 				const user = await User.findById(v._id);
@@ -87,18 +65,7 @@ const TicketSchema = new Schema({
 		// !TODO validation against State object
 	},
 	_user: {
-		type: {
-			_id: {
-				type: mongoose.Schema.Types.ObjectId,
-				required: true
-			},
-			email: {
-				type: String,
-				required: true
-			},
-			firstName: String,
-			lastName: String
-		},
+		type: mongoose.Schema.Types.ObjectId, ref: 'User',
 		required: true,
 		validate: async (v) => {
 			const user = await User.findById(v._id);
@@ -108,18 +75,7 @@ const TicketSchema = new Schema({
 	},
 	modified: [{
 		_user: {
-			type: {
-				_id: {
-					type: mongoose.Schema.Types.ObjectId,
-					required: true
-				},
-				email: {
-					type: String,
-					required: true
-				},
-				firstName: String,
-				lastName: String
-			},
+			type: mongoose.Schema.Types.ObjectId, ref: 'User',
 			required: true,
 			validate: async (v) => {
 				const user = await User.findById(v._id);
@@ -130,25 +86,15 @@ const TicketSchema = new Schema({
 		modifyDate: {
 			type: Date,
 			required: true
-		},
-		
+		}
 	}],
 	_project: {
-		type: {
-			_id: {
-				type: mongoose.Schema.Types.ObjectId,
-				required: true
-			},
-			name: {
-				type: String,
-				required: true
-			},
-			required: true,
-			validate: async (v) => {
-				const project = await Project.findById(v._id);
-				if (!project) return Promise.reject('Project Not Found');
-				return Promise.resolve('Project found');
-			}
+		type: mongoose.Schema.Types.ObjectId, ref: 'Project',
+		required: true,
+		validate: async (v) => {
+			const project = await Project.findById(v._id);
+			if (!project) return Promise.reject('Project Not Found');
+			return Promise.resolve('Project found');
 		}
 	}
 })

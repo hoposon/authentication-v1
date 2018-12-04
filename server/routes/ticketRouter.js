@@ -16,8 +16,8 @@ router.post('/', createTicket);
 function getAllTickets(req, res, next) {
 	Ticket
 	.find()
-	.populate('user')
-	.populate('project')
+	.populate('_user', '_id firstName lastName email')
+	.populate('_project', '_id name')
 	.then((tickets) => {
 		if(!tickets) {
 			setResponse(req, res, '204');
@@ -33,18 +33,13 @@ function getAllTickets(req, res, next) {
 
 function createTicket(req, res, next) {
 	const _body = req.body;
-	
-	const _user = {
-		_id: req.user._id,
-		email: req.user.email,
-		firstName: req.user.firstName || '',
-		lastName: req.user.lastName || '',
-	};
+
+	const _user = req.user._id;
 	let _ticket = {
 		..._body,
 		_user,
 		createDate: Date.now(),
-		modifiedBy:[{
+		modified:[{
 			_user,
 			modifyDate: Date.now()
 		}]
@@ -63,18 +58,19 @@ function createTicket(req, res, next) {
 
 	const ticket = new Ticket(_ticket);
 	// console.log('pproject: ', project);
-	ticket.save().then((ticket) => {
-		if(!ticket) {
+	ticket.save().then((retTicket) => {
+		if(!retTicket) {
 			return Promise.reject();
 		}
-		setResponse(req, res, '200', [ticket]);
+		setResponse(req, res, '200', [retTicket]);
 	})
 	.catch((e) => {
+		// console.log(e.errors[err].reason);
 		if (e && e.name && e.name === 'ValidationError') {
 			const errors = {fields: {}};
 			if (e.errors) {
 				for (const err in e.errors) {
-					errors.fields[e.errors[err].path]	= {kind: e.errors[err].kind, reason: e.errors[err].reason}
+					errors.fields[e.errors[err].path] = {kind: e.errors[err].kind, reason: e.errors[err].reason || `${e.errors[err].kind} not found`}
 				}
 			}
 			setResponse(req, res, '422', errors);
