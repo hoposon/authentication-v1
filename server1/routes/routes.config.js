@@ -143,22 +143,6 @@ const routesConfig = {
 				operationType: 'create',
 				resources: 'tickets'
 			}
-		},
-		'PUT' : {
-			enabled: true,
-			cors: {
-				origin: '*',
-				methods: 'PUT',
-				allowedHeaders: 'Content-Type,Authorization',
-				credentials: false,
-				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-			},
-			authenticate: true,
-			authorization: {
-				authorize: true,
-				operationType: 'update',
-				resources: 'tickets'
-			}
 		}
 	}
 }

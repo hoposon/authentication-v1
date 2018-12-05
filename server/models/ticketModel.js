@@ -18,22 +18,12 @@ const CommentSchema = new Schema({
 	},
 	_user: {
 		type: mongoose.Schema.Types.ObjectId, ref: 'User',
-		required: true,
-		validate: async (v) => {
-			const user = await User.findById(v._id);
-			if (!user) return Promise.reject('User Not Found');
-			return Promise.resolve('User found');
-		}
+		required: true
 	},
 	modified: [{
 		_user: {
 			type: mongoose.Schema.Types.ObjectId, ref: 'User',
-			required: true,
-			validate: async (v) => {
-				const user = await User.findById(v._id);
-				if (!user) return Promise.reject('User Not Found');
-				return Promise.resolve('User found');
-			}
+			required: true
 		},
 		modifyDate: {
 			type: Date,
@@ -66,22 +56,12 @@ const TicketSchema = new Schema({
 	},
 	_user: {
 		type: mongoose.Schema.Types.ObjectId, ref: 'User',
-		required: true,
-		validate: async (v) => {
-			const user = await User.findById(v._id);
-			if (!user) return Promise.reject('User Not Found');
-			return Promise.resolve('User found');
-		}
+		required: true
 	},
 	modified: [{
 		_user: {
 			type: mongoose.Schema.Types.ObjectId, ref: 'User',
-			required: true,
-			validate: async (v) => {
-				const user = await User.findById(v._id);
-				if (!user) return Promise.reject('User Not Found');
-				return Promise.resolve('User found');
-			}
+			required: true
 		},
 		modifyDate: {
 			type: Date,
@@ -102,13 +82,6 @@ const TicketSchema = new Schema({
 // TicketSchema.pre('save', function(next) {
 	
 // })
-
-
-
-
-
-
-
 
 const Ticket = mongoose.model('Ticket', TicketSchema);
 module.exports = {

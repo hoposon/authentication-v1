@@ -14,7 +14,7 @@ const codes = {
 	'204': {
 		code: 204,
 		success: true,
-		message: 'No Content',
+		message: 'No data dound',
 		data: []
 	},
 	'400': {
@@ -66,9 +66,11 @@ const codes = {
 
 function setResponse(req, res, code, data) {
 	const reg = new RegExp(/2[0-9]{2}/);
+	// console.log('code: ', code);
 	if (codes[code]) {
 		let resp = Object.assign({}, codes[code]);
-
+		// let resp = codes[code];
+		// console.log('resp: ', resp);
 		if (data) {
 			if (reg.test(code)) {
 				resp.data = data;
@@ -76,10 +78,9 @@ function setResponse(req, res, code, data) {
 				resp.error.data = data;
 			}
 		}
-
-		res.status(parseInt(code)).send(JSON.stringify(resp));
-	} 
-	else {
+		// console.log('resp: ', resp);
+		res.status(code).send(JSON.stringify(resp));
+	} else {
 		res.status(500).send(JSON.stringify({
 			code: 500,
 			success: false,
@@ -89,9 +90,15 @@ function setResponse(req, res, code, data) {
 				data: {}
 			}
 		}));
-	}	
+	}
+	
+}
+
+function getResponse(codeName) {
+	return codes[codeName] || {code: 500, message: 'Internal Server Error', error: true};
 }
 
 module.exports = {
+	// getResponse,
 	setResponse
 }

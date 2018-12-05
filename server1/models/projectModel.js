@@ -11,14 +11,37 @@ const ProjectSchema = new Schema({
         required: true,
         trim: true,
         minlength: 1,
+        // validate: {
+        //     // validator: (value) => {
+        //     //     return validator.isEmail(value)
+        //     // },
+        //     validator: validator.isEmail,
+        //     message: '{VALUE} is not a valid email'
+        // }
 	},
 	description: {
 		type: String,
         trim: true
 	},
 	_user: {
-		type: mongoose.Schema.Types.ObjectId, ref: 'User',
-		required: true
+		type: {
+			_id: {
+				type: mongoose.Schema.Types.ObjectId,
+				required: true
+			},
+			email: {
+				type: String,
+				required: true
+			},
+			firstName: String,
+			lastName: String
+		},
+		required: true,
+		validate: async (v) => {
+			const user = await User.findById(v._id);
+			if (!user) return Promise.reject('User Not Found');
+			return Promise.resolve('User found');
+		}
 	}
 })
 
@@ -29,7 +52,7 @@ ProjectSchema.methods.toJSON = function() { // !TODO why is this called automati
 	const project = this;
     const projectObject = project.toObject();
 
-	return _.pick(projectObject, ['_id', 'name', 'description', '_user']);
+    return _.pick(projectObject, ['_id', 'name']);
 }
 
 const Project = mongoose.model('Project', ProjectSchema);

@@ -17,18 +17,17 @@ function getAllProjects(req, res, next) {
 
 	Project
 	.find()
-	.populate('_user', '_id firstName lastName email')
-	// .populate('_user')
+	.populate('user')
 	.then((projects) => {
-		if(projects.length === 0) {
-			return setResponse(req, res, '204');
+		if(projects === {}) {
+			setResponse(req, res, '204');
 		}
-		return setResponse(req, res, '200', projects);
+		setResponse(req, res, '200', projects);
 	})
 	.catch((e) => {
+		console.log(e);
 		// console.log(e);
-		// console.log(e);
-		return setResponse(req, res, '500');
+		setResponse(req, res, '500');
 	})
 }
 
@@ -36,14 +35,19 @@ function addProject(req, res, next) {
 	const body = _.pick(req.body, ['name', 'description']);
 	const project = new Project({
 		...body, 
-		_user: req.user._id
+		_user: {
+			_id: req.user._id,
+			email: req.user.email,
+			firstName: req.user.firstName || '',
+			lastName: req.user.lastName || '',
+		}
 	});
 	// console.log('pproject: ', project);
-	project.save().then((retProject) => {
-		if(!retProject) {
+	project.save().then((project) => {
+		if(!project) {
 			return Promise.reject();
 		}
-		return setResponse(req, res, '200', [retProject]);
+		setResponse(req, res, '200', [project]);
 	})
 	.catch((e) => {
 		if (e && e.name && e.name === 'ValidationError') {
@@ -53,9 +57,9 @@ function addProject(req, res, next) {
 					errors.fields[e.errors[err].path]	= {kind: e.errors[err].kind, reason: e.errors[err].reason}
 				}
 			}
-			return setResponse(req, res, '422', errors);
+			setResponse(req, res, '422', errors);
 		} else {
-			return setResponse(req, res, '500');
+			setResponse(req, res, '500');
 		}
 		
 	})

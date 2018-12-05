@@ -24,11 +24,11 @@ function register(req, res, next) {
 			return Promise.reject();
 		}
 		// console.log('user3: ', user);
-		return setResponse(req, res, '201', [user]);
+		setResponse(req, res, '201', user);
 	}).catch((e) => {
 		// !TODO - log error to server and handle error by message
 		// console.log('reg 500 error: ', e);
-		return setResponse(req, res, '500');
+		setResponse(req, res, '500');
 	});
 }
 
@@ -38,11 +38,11 @@ function login(req, res, next) {
     User.findByCredentials(body.email, body.password).then((user) => {
 		return user.generateAuthToken().then((token) => {
 			res.header('Authorization', token);
-			return setResponse(req, res, '200', [user]);
+			setResponse(req, res, '200', user);
 		});
     }).catch((e) => {
 		// !TODO - log error to server
-		return setResponse(req, res, '401');
+		setResponse(req, res, '401');
     });
 }
 
@@ -57,10 +57,10 @@ function grantRoles(req, res, next) {
 		console.log('grantRoles user: ', user);
 		return user.updateRoles(true, tempUser.roles);
 	}).then(() => {
-		return setResponse(req, res, '204');
+		setResponse(req, res, '200');
 	}).catch((e) => {
 		console.log(e);
-		return setResponse(req, res, '422', {
+		setResponse(req, res, '422', {
 			fields: {
 				userId: "Not found",
 				email: "Not found"
