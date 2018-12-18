@@ -1,3 +1,7 @@
+const routesPatterns = {
+	':ID': '[0-9]+'
+}
+
 const routesConfig = {
 	'/v1/users/register': {
 		'POST' : {
@@ -143,7 +147,9 @@ const routesConfig = {
 				operationType: 'create',
 				resources: 'tickets'
 			}
-		},
+		}
+	},
+	'/v1/tickets/:ID': {
 		'PUT' : {
 			enabled: true,
 			cors: {
@@ -174,21 +180,49 @@ const headersDefault = {
 }
 
 const getCorsConfig = (req, callback) => {
-	callback(null, routesConfig[req.originalUrl].cors || corsDefault) ;
+	callback(null, req.routesConfig[req.method].cors || corsDefault) ;
 }
 
 const setRouteHeaders = (req, res, next) => {
 	let headers = headersDefault;
-	if (routesConfig && routesConfig[req.originalUrl] && routesConfig[req.originalUrl].headers) {
-		headers = {...headers, ...routesConfig[req.path].headers};
+	// console.log('req.routeConfig2: ', req.routeConfig);
+	if (req.routeConfig[req.method] && req.routeConfig[req.method].headers) {
+		headers = {...headers, ...req.routeConfig[req.method].headers};
 	}
 	for (const header in headers) {
 		res.header(header, headers[header]);
 	}
+	// console.log('req.routeConfig2: ', req.routeConfig);
 	next();
 }
 
+const getRouteConfig = (url) => {
+	// console.log('routesConfig: ', routesConfig);
+	for (let path in routesConfig) {
+		let pathMatch = '^'+path;
+		// console.log('path1: ', pathMatch);
+		for (const pattern in routesPatterns) {
+			pathMatch = pathMatch.replace(pattern, routesPatterns[pattern]);
+			// console.log('path2: ', pathMatch);
+		}
+		// console.log('path3: ', path.replace(/\//g, '\\/'));
+		pathMatch = pathMatch.replace(/\//g, '\\/');
+		pathMatch += '$';
+		// console.log('path4: ', pathMatch);
+		
+		// const regStr = new RegExp(path,'g');
+		// const regStr = /^\/v1\/tickets\/[0-9]+/g;
+		// console.log('url to match: ', url);
+		if (new RegExp(pathMatch).test(url)) {
+			console.log('pattern matched: ', pathMatch);		
+			return routesConfig[path];
+		}
+	}
+	return false
+}
+
 module.exports = {
+	getRouteConfig,
 	routesConfig,
 	getCorsConfig,
 	setRouteHeaders

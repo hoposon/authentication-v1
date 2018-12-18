@@ -12,8 +12,12 @@ router.get('/');
 router.get('/', getAllTickets);
 router.post('/');
 router.post('/', createTicket);
-router.put('/');
-router.put('/', updateTicket);
+router.put('/:id');
+router.put('/:id', updateTicket);
+router.post('/:id/comments');
+router.post('/:id/comments', createComment);
+router.put('/:id/comments/:id');
+router.put('/:id/comments/:id', updateComment);
 
 
 function getAllTickets(req, res, next) {
@@ -147,6 +151,14 @@ function updateTicket(req, res, next) {
 			}
 		}))
 	})
+}
+
+function createComment(req, res, next) {
+	return setResponse(req, res, '204');
+}
+
+function updateComment(req, res, next) {
+	return setResponse(req, res, '204');
 }
 
 module.exports = router;

@@ -1,7 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
 const {Project} = require('../models/projectModel');
-const {ObjectID} = require('mongodb');
 
 // response codes and massages
 const { setResponse } = require('../responses.config');
