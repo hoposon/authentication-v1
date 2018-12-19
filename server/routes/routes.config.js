@@ -1,5 +1,5 @@
 const routesPatterns = {
-	':ID': '[0-9]+'
+	':ID': '([a-z0-9])+'
 }
 
 const routesConfig = {
@@ -180,20 +180,27 @@ const headersDefault = {
 }
 
 const getCorsConfig = (req, callback) => {
-	callback(null, req.routesConfig[req.method].cors || corsDefault) ;
+	// console.log('req.routeConfig2: ', req.routeConfig);
+	callback(null, req.routeConfig[req.method].cors || corsDefault) ;
 }
 
-const setRouteHeaders = (req, res, next) => {
+const setHeaders = (headers, res) => {
+	for (const header in headers) {
+		res.header(header, headers[header]);
+	}
+}
+
+const setDeaultHeaders = (req, res) => {
+	setHeaders(headersDefault, res);
+}
+
+const setRouteHeaders = (req, res) => {
 	let headers = headersDefault;
 	// console.log('req.routeConfig2: ', req.routeConfig);
 	if (req.routeConfig[req.method] && req.routeConfig[req.method].headers) {
 		headers = {...headers, ...req.routeConfig[req.method].headers};
 	}
-	for (const header in headers) {
-		res.header(header, headers[header]);
-	}
-	// console.log('req.routeConfig2: ', req.routeConfig);
-	next();
+	setHeaders(headers, res);
 }
 
 const getRouteConfig = (url) => {
@@ -218,12 +225,14 @@ const getRouteConfig = (url) => {
 			return routesConfig[path];
 		}
 	}
+	console.log('pattern notmatched: ');
 	return false
 }
 
 module.exports = {
 	getRouteConfig,
-	routesConfig,
+	// routesConfig,
 	getCorsConfig,
-	setRouteHeaders
+	setRouteHeaders,
+	setDeaultHeaders
 }

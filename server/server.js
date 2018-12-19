@@ -52,10 +52,10 @@ const port = process.env.PORT || 3000;
 // middlewares --------------------
 // parse middleware
 app.use(bodyParser.json());
-// sets headers
-app.use(setHeaders);
 // check if path is allowed
 app.use(detectAllowedRoutes);
+// sets headers
+app.use(setHeaders);
 // set cors
 app.use(cors(getCorsConfig));
 // authenticate with jws

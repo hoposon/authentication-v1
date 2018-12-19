@@ -5,7 +5,7 @@ const {User} = require('../models/userModel');
 
 const authenticate = (req, res, next) => {
 
-	if (req.routesConfig[req.method] && req.routesConfig[req.method].authenticate) {
+	if (req.routeConfig[req.method] && req.routeConfig[req.method].authenticate) {
 
 		const token = req.header('Authorization');
 		console.log('auth header: ', token);
@@ -25,7 +25,7 @@ const authenticate = (req, res, next) => {
 			// !TODO - log error to server
 			setResponse(req, res, '401');
 		});
-	} else if (req.routesConfig[req.method] && req.routesConfig[req.method].authenticate === false) {
+	} else if (req.routeConfig[req.method] && req.routeConfig[req.method].authenticate === false) {
 		next();
 	} else {
 		// !TODO - log error to server

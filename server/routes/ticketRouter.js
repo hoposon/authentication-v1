@@ -100,57 +100,59 @@ function createTicket(req, res, next) {
 }
 
 function updateTicket(req, res, next) {
-	let _body = _.pick(req.body, ['_id', 'name', 'description', '_state', '_project']);
+	console.log('req: ', req);
+	return setResponse(req, res, '204');
+	// let _body = _.pick(req.body, ['_id', 'name', 'description', '_state', '_project']);
 
-	if(!ObjectID.isValid(_body._id)) {
-		const errors = {fields: {
-			_id: {
-				kind: 'ObjectID',
-				reason: 'Not valid ObjectID'
-			}
-		}};
-        return setResponse(req, res, '422', errors);
-	}
+	// if(!ObjectID.isValid(_body._id)) {
+	// 	const errors = {fields: {
+	// 		_id: {
+	// 			kind: 'ObjectID',
+	// 			reason: 'Not valid ObjectID'
+	// 		}
+	// 	}};
+    //     return setResponse(req, res, '422', errors);
+	// }
 	
-	if(!ObjectID.isValid(_body._project)) {
-		const errors = {fields: {
-			_project: {
-				kind: 'ObjectID',
-				reason: 'Not valid ObjectID'
-			}
-		}};
-        return setResponse(req, res, '422', errors);
-    }
+	// if(!ObjectID.isValid(_body._project)) {
+	// 	const errors = {fields: {
+	// 		_project: {
+	// 			kind: 'ObjectID',
+	// 			reason: 'Not valid ObjectID'
+	// 		}
+	// 	}};
+    //     return setResponse(req, res, '422', errors);
+    // }
 
-	const _user = req.user._id;
-	Ticket.findOne({_id: _body._id}).then((ticket) => {
-		if (!ticket) {
-			return setResponse(req, res, '404');
-		}
-		ticket.modified.push({
-			_user,
-			modifyDate: Date.now()
-		})
-		_body = {
-			..._body,
-			modified:ticket.modified
-		}
-		ticket.updateOne({$set: _body}).then((retTicket) => {
-			return setResponse(req, res, '204');
-		}).catch((e => {
-			if (e && e.name && e.name === 'ValidationError') {
-				const errors = {fields: {}};
-				if (e.errors) {
-					for (const err in e.errors) {
-						errors.fields[e.errors[err].path] = {kind: e.errors[err].kind, reason: e.errors[err].reason || `${e.errors[err].kind} not found`}
-					}
-				}
-				return setResponse(req, res, '422', errors);
-			} else {
-				return setResponse(req, res, '500');
-			}
-		}))
-	})
+	// const _user = req.user._id;
+	// Ticket.findOne({_id: _body._id}).then((ticket) => {
+	// 	if (!ticket) {
+	// 		return setResponse(req, res, '404');
+	// 	}
+	// 	ticket.modified.push({
+	// 		_user,
+	// 		modifyDate: Date.now()
+	// 	})
+	// 	_body = {
+	// 		..._body,
+	// 		modified:ticket.modified
+	// 	}
+	// 	ticket.updateOne({$set: _body}).then((retTicket) => {
+	// 		return setResponse(req, res, '204');
+	// 	}).catch((e => {
+	// 		if (e && e.name && e.name === 'ValidationError') {
+	// 			const errors = {fields: {}};
+	// 			if (e.errors) {
+	// 				for (const err in e.errors) {
+	// 					errors.fields[e.errors[err].path] = {kind: e.errors[err].kind, reason: e.errors[err].reason || `${e.errors[err].kind} not found`}
+	// 				}
+	// 			}
+	// 			return setResponse(req, res, '422', errors);
+	// 		} else {
+	// 			return setResponse(req, res, '500');
+	// 		}
+	// 	}))
+	// })
 }
 
 function createComment(req, res, next) {
