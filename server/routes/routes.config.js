@@ -1,5 +1,5 @@
 const routesPatterns = {
-	':ID': '([a-z0-9])+'
+	':ticketId': '([a-z0-9])+'
 }
 
 const routesConfig = {
@@ -149,7 +149,7 @@ const routesConfig = {
 			}
 		}
 	},
-	'/v1/tickets/:ID': {
+	'/v1/tickets/:ticketId': {
 		'PUT' : {
 			enabled: true,
 			cors: {
@@ -164,6 +164,24 @@ const routesConfig = {
 				authorize: true,
 				operationType: 'update',
 				resources: 'tickets'
+			}
+		}
+	},
+	'/v1/tickets/:ticketId/comments': {
+		'POST' : {
+			enabled: true,
+			cors: {
+				origin: '*',
+				methods: 'POST',
+				allowedHeaders: 'Content-Type,Authorization',
+				credentials: false,
+				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+			},
+			authenticate: true,
+			authorization: {
+				authorize: true,
+				operationType: 'create',
+				resources: 'comments'
 			}
 		}
 	}

@@ -1,6 +1,3 @@
-// routes configuration
-const { routesConfig } = require('../routes/routes.config');
-
 let roles = {
 	grantsAdmin: {
 		can: {
@@ -124,13 +121,11 @@ class RBAC {
 
 const authorize = (req, res, next) => {
 
-	if (routesConfig[req.path] && 
-		routesConfig[req.path][req.method] && 
-		routesConfig[req.path][req.method].authorization &&
-		routesConfig[req.path][req.method].authorization.authorize &&
-		routesConfig[req.path][req.method].authorization.operationType) {
+	if (req.routeConfig[req.method].authorization &&
+		req.routeConfig[req.method].authorization.authorize &&
+		req.routeConfig[req.method].authorization.operationType) {
 
-		const operation = routesConfig[req.path][req.method].authorization.operationType;
+		const operation = req.routeConfig[req.method].authorization.operationType;
 		const auth = new RBAC(roles);
 
 		if(auth.can(req.user.roles, operation).can) {
@@ -140,10 +135,8 @@ const authorize = (req, res, next) => {
 		}
 		next();
 
-	} else if (routesConfig[req.path] && 
-		routesConfig[req.path][req.method] && 
-		routesConfig[req.path][req.method].authorization &&
-		routesConfig[req.path][req.method].authorization.authorize === false) {
+	} else if (req.routeConfig[req.method].authorization &&
+				req.routeConfig[req.method].authorization.authorize === false) {
 		console.log('auth false');
 		next();
 	} else {

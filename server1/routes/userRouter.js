@@ -54,12 +54,12 @@ function grantRoles(req, res, next) {
 		_id: tempUser.userId,
 		email: tempUser.email
 	}).then((user) => {
-		console.log('grantRoles user: ', user);
+		// console.log('grantRoles user: ', user);
 		return user.updateRoles(true, tempUser.roles);
 	}).then(() => {
 		setResponse(req, res, '200');
 	}).catch((e) => {
-		console.log(e);
+		// console.log(e);
 		setResponse(req, res, '422', {
 			fields: {
 				userId: "Not found",

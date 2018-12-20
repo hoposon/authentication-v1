@@ -72,7 +72,7 @@ function test(req, res, next) {
 
 	let acl = new RBAC(roles);
 	acl.s(['user', 'admin', 'superAdmin', 'adminT', 'adminU'], 0);
-	console.log('sorted arr: ', acl.sorted);
+	// console.log('sorted arr: ', acl.sorted);
 	setResponse(req, res, '200', {message: 'OK, /test/test'});
 }
 

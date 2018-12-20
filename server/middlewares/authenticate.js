@@ -8,7 +8,7 @@ const authenticate = (req, res, next) => {
 	if (req.routeConfig[req.method] && req.routeConfig[req.method].authenticate) {
 
 		const token = req.header('Authorization');
-		console.log('auth header: ', token);
+		// console.log('auth header: ', token);
 		User.findByToken(token).then((user) => {
 			if(!user) {
 				return Promise.reject();

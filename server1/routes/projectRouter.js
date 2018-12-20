@@ -25,7 +25,7 @@ function getAllProjects(req, res, next) {
 		setResponse(req, res, '200', projects);
 	})
 	.catch((e) => {
-		console.log(e);
+		// console.log(e);
 		// console.log(e);
 		setResponse(req, res, '500');
 	})
