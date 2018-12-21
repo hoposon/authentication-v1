@@ -17,13 +17,10 @@ router.patch('/roles', grantRoles);
 function register(req, res, next) {
 	const body = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
 	const user = new User(body);
-	// console.log('user1: ', user);
 	user.generateAuthToken().then((token) => {
-		// console.log('user2: ', user);
 		if(!token) {
 			return Promise.reject();
 		}
-		// console.log('user3: ', user);
 		return setResponse(req, res, '201', [user]);
 	}).catch((e) => {
 		// !TODO - log error to server and handle error by message
@@ -68,6 +65,11 @@ function grantRoles(req, res, next) {
 		});
 	});
 }
+
+// !TODO
+// function revokeRoles(req, res, next) {
+
+// }
 
 
 module.exports = router;

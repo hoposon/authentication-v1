@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/');
 router.get('/', getAllProjects);
 router.post('/');
-router.post('/', addProject);
+router.post('/', createProject);
 
 function getAllProjects(req, res, next) {
 
@@ -31,13 +31,12 @@ function getAllProjects(req, res, next) {
 	})
 }
 
-function addProject(req, res, next) {
+function createProject(req, res, next) {
 	const body = _.pick(req.body, ['name', 'description']);
 	const project = new Project({
 		...body, 
 		_user: req.user._id
 	});
-	// console.log('pproject: ', project);
 	project.save().then((retProject) => {
 		if(!retProject) {
 			return Promise.reject();

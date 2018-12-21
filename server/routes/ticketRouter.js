@@ -10,14 +10,18 @@ const router = express.Router();
 
 router.get('/');
 router.get('/', getAllTickets);
+// !TODO
+// router.get('/:ticketId');
+// router.get('/:ticketId', getTicketById);
+// !TODO some kind of search
 router.post('/');
 router.post('/', createTicket);
 router.put('/:ticketId');
 router.put('/:ticketId', updateTicket);
 router.post('/:ticketId/comments');
 router.post('/:ticketId/comments', createComment);
-router.put('/:id/comments/:id');
-router.put('/:id/comments/:id', updateComment);
+router.put('/:ticketId/comments/:commentId');
+router.put('/:ticketId/comments/:commentId', updateComment);
 
 
 function getAllTickets(req, res, next) {
@@ -77,7 +81,6 @@ function createTicket(req, res, next) {
 	}
 
 	const ticket = new Ticket(_ticket);
-	// console.log('_ticket: ', _ticket);
 	ticket.save().then((retTicket) => {
 		if(!retTicket) {
 			return Promise.reject();
@@ -90,7 +93,6 @@ function createTicket(req, res, next) {
 			const errors = {fields: {}};
 			if (e.errors) {
 				for (const err in e.errors) {
-					// console.log(toString(e.errors[err].reason));
 					errors.fields[e.errors[err].path] = {kind: e.errors[err].kind, reason: e.errors[err].reason || `${e.errors[err].kind} not found`}
 				}
 			}
@@ -103,8 +105,6 @@ function createTicket(req, res, next) {
 }
 
 function updateTicket(req, res, next) {
-	// console.log('req params: ', req.params);
-	// return setResponse(req, res, '204');
 	let _body = _.pick(req.body, ['name', 'description', '_state', '_project']);
 
 	if(!ObjectID.isValid(req.params.ticketId)) {
@@ -116,7 +116,6 @@ function updateTicket(req, res, next) {
 		}};
         return setResponse(req, res, '422', errors);
 	}
-	// console.log('_body._project: ', _body._project);
 	if(!ObjectID.isValid(_body._project)) {
 		const errors = {fields: {
 			_project: {
@@ -196,7 +195,52 @@ function createComment(req, res, next) {
 }
 
 function updateComment(req, res, next) {
-	return setResponse(req, res, '204');
+	let _body = _.pick(req.body, ['comment']);
+	console.log('body comment: ', _body);
+
+	if(!ObjectID.isValid(req.params.ticketId)) {
+		const errors = {fields: {
+			ticketId: {
+				kind: 'ObjectID',
+				reason: 'Not valid ObjectID'
+			}
+		}};
+        return setResponse(req, res, '422', errors);
+	}
+
+	if(!ObjectID.isValid(req.params.commentId)) {
+		const errors = {fields: {
+			commentId: {
+				kind: 'ObjectID',
+				reason: 'Not valid ObjectID'
+			}
+		}};
+        return setResponse(req, res, '422', errors);
+	}
+
+	Ticket.findOne({_id: req.params.ticketId}).then((ticket) => {
+		if (!ticket) {
+			return Promise.reject('TICKET_NOT_FOUND');
+		}
+
+		for (let i = 0; i < ticket.comments.length; i++) {
+			if (ticket.comments[i]._id.toString() === req.params.commentId.toString()) {
+				ticket.comments[i].comment = _body.comment;
+				ticket.comments[i].modified.push({
+					_user: req.user._id,
+					modifyDate: Date.now()
+				})
+				break;
+			}
+		}
+		return ticket.save();
+	}).then(() => {
+		return setResponse(req, res, '204');
+	}).catch((e) => {
+		// if (e.message ) !TODO correctly handle save/ticket not found errors/other errors
+		console.log('create comment error: ', e);
+		return setResponse(req, res, '400');
+	})
 }
 
 module.exports = router;
