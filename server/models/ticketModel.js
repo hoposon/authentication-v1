@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const _ = require('lodash');
-const { User } = require('./userModel');
+// const { TimeUnits } = require('./timeUnitsModel');
 const { Project } = require('./projectModel');
 
 const Schema = mongoose.Schema;
@@ -32,6 +32,35 @@ const CommentSchema = new Schema({
 	}]
 })
 
+const WorkloadSchema = new Schema({
+	workloadDate: {
+		type: Date,
+		required: true
+	},
+	workloadAmount: {
+		type: Number,
+		required: true
+	},
+	workloadAmountUnit: {
+		type: mongoose.Schema.Types.ObjectId, ref: 'TimeUnit',
+		required: true
+	},
+	workloadUser: {
+		type: mongoose.Schema.Types.ObjectId, ref: 'User',
+		required: true
+	},
+	modified: [{
+		_user: {
+			type: mongoose.Schema.Types.ObjectId, ref: 'User',
+			required: true
+		},
+		modifyDate: {
+			type: Date,
+			required: true
+		}
+	}]
+})
+
 const TicketSchema = new Schema({
 	name: {
 		type: String,
@@ -48,6 +77,7 @@ const TicketSchema = new Schema({
 		type: Date,
 		required: true
 	},
+	worked: {WorkloadSchema},
 	comments: [CommentSchema],
 	_state: {
 		type: String,

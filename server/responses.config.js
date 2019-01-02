@@ -78,17 +78,8 @@ function setResponse(req, res, code, data) {
 		}
 
 		res.status(parseInt(code)).send(JSON.stringify(resp));
-	} 
-	else {
-		res.status(500).send(JSON.stringify({
-			code: 500,
-			success: false,
-			error: { 
-				errorCode: "SERVER_ERROR",
-				message: "Internal server error",
-				data: {}
-			}
-		}));
+	} else {
+		res.status(500).send(JSON.stringify(codes['500']));
 	}	
 }
 

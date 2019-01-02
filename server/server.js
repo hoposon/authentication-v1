@@ -19,6 +19,7 @@ const {authorize} = require('./middlewares/authorization');
 const userRouter = require('./routes/userRouter');
 const projectRouter = require('./routes/projectRouter');
 const ticketRouter = require('./routes/ticketRouter');
+const timeUnitRouter = require('./routes/timeUnitRouter');
 const testRouter = require('./routes/testRouter');
 
 // get mongoDB and create connection
@@ -31,23 +32,6 @@ const {getCorsConfig} = require('./routes/routes.config');
 // create express app and set port
 const app = express();
 const port = process.env.PORT || 3000;
-
-// app.use((req, res, next) => {
-// 	res.header('Access-Control-Allow-Origin', '*');
-// 	res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-// 	res.header('Access-Control-Allow-Credentials', 'true');
-// 	res.header('Access-Control-Allow-Headers', 'content-type');
-// 	res.header('Access-Control-Allow-Origin', 'http://local.avast.com:5000');
-// 	next();
-// });
-// app.options('/avast/test');
-// // app.options('/avast/test', (req) => {
-// // 	console.log('avast preflight request: ', req);
-// // });
-// app.post('/avast/test', (req, res) => {
-// 	console.log('avast request: ', req.headers);
-// 	res.send({message: "OK"});
-// });
 
 // middlewares --------------------
 // parse middleware
@@ -73,6 +57,9 @@ app.use('/v1/projects', projectRouter);
 
 // ticket related routes
 app.use('/v1/tickets', ticketRouter);
+
+// time units related routes
+app.use('/v1/timeunits', timeUnitRouter);
 
 
 // test routes

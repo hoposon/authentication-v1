@@ -1,9 +1,46 @@
 const routesPatterns = {
 	':ticketId': '([a-z0-9])+',
-	':commentId': '([a-z0-9])+'
+	':commentId': '([a-z0-9])+',
+	':unitId': '([a-z0-9])+'
 }
 
 const routesConfig = {
+	'/v1/timeunits': {
+		'POST' : {
+			enabled: true,
+			cors: {
+				origin: '*',
+				methods: 'POST',
+				allowedHeaders: 'Content-Type,Authorization',
+				credentials: false,
+				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+			},
+			authenticate: false,
+			authorization: {
+				authorize: false,
+				operationType: 'create',
+				resources: 'users'
+			}			
+		}
+	},
+	'/v1/timeunits/:unitId': {
+		'DELETE' : {
+			enabled: true,
+			cors: {
+				origin: '*',
+				methods: 'DELETE',
+				allowedHeaders: 'Content-Type,Authorization',
+				credentials: false,
+				optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+			},
+			authenticate: false,
+			authorization: {
+				authorize: false,
+				operationType: 'create',
+				resources: 'users'
+			}			
+		}
+	},
 	'/v1/users/register': {
 		'POST' : {
 			enabled: true,
@@ -207,8 +244,8 @@ const routesConfig = {
 }
 
 const corsDefault = {
-	// origin: 'http://localhost'
-	origin: 'http://example.com'
+	origin: 'http://localhost'
+	// origin: 'http://example.com'
 }
 
 const headersDefault = {
@@ -243,8 +280,9 @@ const setRouteHeaders = (req, res) => {
 const getRouteConfig = (url) => {
 	// console.log('routesConfig: ', routesConfig);
 	for (let path in routesConfig) {
+		// console.log('path1: ', path);
 		let pathMatch = '^'+path;
-		// console.log('path1: ', pathMatch);
+		// console.log('path2: ', pathMatch);
 		for (const pattern in routesPatterns) {
 			pathMatch = pathMatch.replace(pattern, routesPatterns[pattern]);
 			// console.log('path2: ', pathMatch);
@@ -257,6 +295,8 @@ const getRouteConfig = (url) => {
 		// const regStr = new RegExp(path,'g');
 		// const regStr = /^\/v1\/tickets\/[0-9]+/g;
 		// console.log('url to match: ', url);
+		// console.log('regexp: ', pathMatch);
+		// console.log('match: ', new RegExp(pathMatch).test(url));
 		if (new RegExp(pathMatch).test(url)) {
 			console.log('pattern matched: ', pathMatch);		
 			return routesConfig[path];
@@ -268,7 +308,6 @@ const getRouteConfig = (url) => {
 
 module.exports = {
 	getRouteConfig,
-	// routesConfig,
 	getCorsConfig,
 	setRouteHeaders,
 	setDeaultHeaders
