@@ -22,6 +22,8 @@ router.post('/:ticketId/comments');
 router.post('/:ticketId/comments', createComment);
 router.put('/:ticketId/comments/:commentId');
 router.put('/:ticketId/comments/:commentId', updateComment);
+router.post('/:ticketId/workloads');
+router.post('/:ticketId/workloads', createWorkload);
 
 
 function getAllTickets(req, res, next) {
@@ -48,7 +50,7 @@ function getAllTickets(req, res, next) {
 function createTicket(req, res, next) {
 	const _body = req.body;
 
-	if(!ObjectID.isValid(_body._project)) {
+	if(_body._project && !ObjectID.isValid(_body._project)) {
 		const errors = {fields: {
 			_project: {
 				kind: 'ObjectID',
@@ -116,7 +118,7 @@ function updateTicket(req, res, next) {
 		}};
         return setResponse(req, res, '422', errors);
 	}
-	if(!ObjectID.isValid(_body._project)) {
+	if(_body._project && !ObjectID.isValid(_body._project)) {
 		const errors = {fields: {
 			_project: {
 				kind: 'ObjectID',
@@ -238,6 +240,41 @@ function updateComment(req, res, next) {
 		return setResponse(req, res, '204');
 	}).catch((e) => {
 		// if (e.message ) !TODO correctly handle save/ticket not found errors/other errors
+		console.log('create comment error: ', e);
+		return setResponse(req, res, '400');
+	})
+}
+
+function createWorkload(req, res, next) {
+	let _body = _.pick(req.body, ['workloadDate', 'workloadAmount', 'workloadAmountUnit', 'workloadUser']);
+
+	if(!ObjectID.isValid(req.params.ticketId)) {
+		const errors = {fields: {
+			ticketId: {
+				kind: 'ObjectID',
+				reason: 'Not valid ObjectID'
+			}
+		}};
+        return setResponse(req, res, '422', errors);
+	}
+
+	Ticket.findOne({_id: req.params.ticketId}).then((ticket) => {
+		console.log('ticket: ', ticket.workload);
+		if (!ticket) {
+			return Promise.reject('TICKET_NOT_FOUND');
+		}
+		
+		ticket.workload = _body;
+		console.log('ticket.workload: ', ticket);
+		// ticket.comments[ticket.comments.length - 1].modified.push({
+		// 	_user: req.user._id,
+		// 	modifyDate: Date.now()
+		// });
+		return ticket.save();
+	}).then(() => {
+		return setResponse(req, res, '204');
+	}).catch((e) => {
+		// if (e.message )
 		console.log('create comment error: ', e);
 		return setResponse(req, res, '400');
 	})

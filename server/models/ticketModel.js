@@ -34,11 +34,11 @@ const CommentSchema = new Schema({
 
 const WorkloadSchema = new Schema({
 	workloadDate: {
-		type: Date,
+		type: String,
 		required: true
 	},
 	workloadAmount: {
-		type: Number,
+		type: String,
 		required: true
 	},
 	workloadAmountUnit: {
@@ -77,7 +77,7 @@ const TicketSchema = new Schema({
 		type: Date,
 		required: true
 	},
-	worked: {WorkloadSchema},
+	workload: {WorkloadSchema},
 	comments: [CommentSchema],
 	_state: {
 		type: String,
@@ -100,7 +100,7 @@ const TicketSchema = new Schema({
 	}],
 	_project: {
 		type: mongoose.Schema.Types.ObjectId, ref: 'Project',
-		required: true,
+		required: false,
 		validate: async (v) => {
 			const project = await Project.findById(v._id);
 			if (!project) return Promise.reject('Project Not Found');
